@@ -48,6 +48,7 @@ export default class App extends React.Component {
       var self = this;
       self.setState({loading: true});
       let numberContract = web3.eth.contract(NumberJson.abi).at(self.state.numberContract);
+      console.log(self.state.number);
 
       let tx = await numberContract.guessNumber(self.state.number, {gas: 100000, from: web3.eth.accounts[1]});
       await self.waitForTX(tx);
