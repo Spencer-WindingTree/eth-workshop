@@ -19,6 +19,7 @@ export default class App extends React.Component {
       super();
       this.state = {
         numberContract: '0x0000000000000000000000000000000000000000',
+        contractBalance: 0,
         number: 1,
         txs: []
       }
@@ -39,9 +40,13 @@ export default class App extends React.Component {
       let numberContract = await self.createContract(NumberJson.abi, data, web3.eth.accounts[0]);
       await self.waitForTX(numberContract.transactionHash);
 
+      let sendTx = web3.eth.sendTransaction({to: numberContract.address, value: web3.toWei(5,'ether'), from: web3.eth.accounts[0]});
+      await self.waitForTX(sendTx);
+
       console.log('Number Contract deployed:', numberContract);
       console.log('Number Contract owner:', numberContract.owner());
-      self.setState({numberContract: numberContract.address, loading: false});
+      var contractBalance = parseFloat(await web3.eth.getBalance(numberContract.address));
+      self.setState({numberContract: numberContract.address, loading: false, contractBalance: contractBalance});
     }
 
     async guessNumber(){
@@ -53,7 +58,8 @@ export default class App extends React.Component {
       await self.waitForTX(tx);
 
       console.log('Winner:', numberContract.winner(), web3.eth.accounts[1]);
-      self.setState({number: parseInt(self.state.number)+1, loading: false});
+      var contractBalance = parseInt(await web3.eth.getBalance(self.state.numberContract));
+      self.setState({number: parseInt(self.state.number)+1, loading: false, contractBalance: contractBalance});
     }
 
     async changeNumber(){
@@ -64,8 +70,12 @@ export default class App extends React.Component {
       let tx = await numberContract.changeNumber(5, {gas: 100000, from: web3.eth.accounts[0]});
       await self.waitForTX(tx);
 
+      let sendTx = web3.eth.sendTransaction({to: numberContract.address, value: web3.toWei(5,'ether'), from: web3.eth.accounts[0]});
+      await self.waitForTX(sendTx);
+
       console.log('Winner:', numberContract.winner());
-      self.setState({ loading: false});
+      var contractBalance = parseInt(await web3.eth.getBalance(self.state.numberContract));
+      self.setState({ loading: false, contractBalance: contractBalance});
     }
 
     async createContract(abi, data, from){
@@ -155,6 +165,8 @@ export default class App extends React.Component {
                 <h2>Data on Blockchain</h2>
                 <h3>Number Contract</h3>
                 <h4><small>{self.state.numberContract}</small></h4>
+                <h3>Number Contract Blance</h3>
+                <h3><small>{self.state.contractBalance} Wei</small></h3>
               </div>
             </div>
           </div>
