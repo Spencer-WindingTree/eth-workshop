@@ -14,6 +14,8 @@ contract Number is Ownable {
 			throw;
 	}
 
+	function() payable {}
+
 	function Number(uint testNumber) {
 		number = testNumber;
 	}
@@ -26,6 +28,8 @@ contract Number is Ownable {
 	function guessNumber(uint _number) noWinner() {
 		if (number == _number) {
 			winner = msg.sender;
+			if (!msg.sender.send(this.balance))
+				throw;
 		}
 	}
 
