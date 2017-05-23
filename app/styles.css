@@ -1,0 +1,15 @@
+
+body{
+  padding-top: 20px;
+}
+
+.shortCell{
+  max-width: 120px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.pointer {
+  cursor: pointer;
+}

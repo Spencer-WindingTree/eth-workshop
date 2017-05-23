@@ -1,0 +1,57 @@
+{
+  "name": "Eth-workshop",
+  "version": "1.0.0",
+  "description": "Simple eth app",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.config.js",
+    "compile": "./node_modules/truffle/cli.js compile"
+  },
+  "keywords": [
+    "winding-tree",
+    "smart-contracts"
+  ],
+  "author": "Augusto Lemble <augusto@windingtree.com>",
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.0",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-react-html-attrs": "^2.0.0",
+    "babel-plugin-transform-class-properties": "^6.3.13",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "bootstrap": "^3.3.6",
+    "file-loader": "^0.8.5",
+    "font-awesome": "^4.7.0",
+    "history": "^1.17.0",
+    "lodash": "^4.16.2",
+    "moment": "^2.13.0",
+    "raw-loader": "^0.5.1",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-router": "^1.0.3",
+    "react-social": "^1.6.1",
+    "style-loader": "^0.17.0",
+    "url-loader": "^0.5.7",
+    "webpack": "^2.4.1",
+    "webpack-dev-server": "^2.4.2",
+
+    "abi-decoder": "^1.0.8",
+    "chai": "^3.5.0",
+    "eth-lightwallet": "^2.5.4",
+    "kbpgp": "^2.0.64",
+    "moment": "^2.18.1",
+    "protobufjs": "^6.6.3",
+    "truffle-hdwallet-provider": "0.0.3",
+    "zeppelin-solidity": "1.0.5"
+  },
+  "devDependencies": {
+    "ethereumjs-testrpc": "3.0.3",
+    "truffle": "3.2.1"
+  }
+}
