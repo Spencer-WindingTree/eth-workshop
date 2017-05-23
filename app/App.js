@@ -6,6 +6,9 @@ var NumberJson = require('../build/contracts/Number.json');
 import Web3 from 'web3';
 var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
+var abiDecoder = require('abi-decoder');
+
+
 var Tx = require('ethereumjs-tx');
 
 var chai = require('chai');
@@ -45,7 +48,7 @@ export default class App extends React.Component {
       var self = this;
       self.setState({loading: true});
       let numberContract = web3.eth.contract(NumberJson.abi).at(self.state.numberContract);
-      console.log(self.state.number);
+
       let tx = await numberContract.guessNumber(self.state.number, {gas: 100000, from: web3.eth.accounts[1]});
       await self.waitForTX(tx);
 
@@ -111,6 +114,7 @@ export default class App extends React.Component {
 
     render() {
       var self = this;
+      abiDecoder.addABI(NumberJson.abi);
       return( self.state.loading ?
         <div class="row text-center jumbotron">
           <br></br>
@@ -171,12 +175,17 @@ export default class App extends React.Component {
                   <th>Value</th>
                   <th>Gas</th>
                   <th>Data</th>
+                  <th>Params</th>
                 </tr>
               </thead>
               <tbody>
                 {self.state.txs.map(function(tx, i){
                   return (
-                    <tr key={'tx'+i} class="pointer" onClick={() => console.log(tx)}>
+                    <tr key={'tx'+i} class="pointer" onClick={() => {
+                        console.log(tx);
+                        if (abiDecoder.decodeMethod(tx.input))
+                          console.log('TX Params:',JSON.stringify(abiDecoder.decodeMethod(tx.input)));
+                      }}>
                       <td>{tx.blockNumber}</td>
                       <td class="shortCell">{tx.hash}</td>
                       <td class="shortCell">{tx.from}</td>
@@ -184,6 +193,7 @@ export default class App extends React.Component {
                       <td>{parseInt(tx.value)}</td>
                       <td>{tx.gas}</td>
                       <td class="shortCell">{tx.input}</td>
+                      <td class="shortCell">{abiDecoder.decodeMethod(tx.input) ? JSON.stringify(abiDecoder.decodeMethod(tx.input)) : ''}</td>
                     </tr>
                   );
                 })}
