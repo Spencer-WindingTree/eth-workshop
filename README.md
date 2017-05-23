@@ -15,6 +15,13 @@ npm install
 To run the webapp you need to run `npm start` && `testrpc` simultaneously,
 be sure to do a `npm run compile` to compile the contracts before start the app.
 
+```sh
+./node_modules/ethereumjs-testrpc/bin/testrpc
+
+npm run compile
+npm start
+```
+
 ## Important files
 
 ### contracts/Number.sol
