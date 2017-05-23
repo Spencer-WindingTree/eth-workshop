@@ -73,12 +73,17 @@ export default class App extends React.Component {
       self.setState({loading: false, contractBalance: contractBalance});
     }
 
+    setChangeGameNumber(ev){
+      var self = this;
+      self.setState({changeGameNumber: ev.target.value});
+    }
+
     async changeNumber(){
       var self = this;
       self.setState({loading: true});
       let numberContract = web3.eth.contract(NumberJson.abi).at(self.state.numberContract);
 
-      let tx = await numberContract.changeNumber(5, {gas: 100000, from: web3.eth.accounts[0]});
+      let tx = await numberContract.changeNumber(self.state.changeGameNumber, {gas: 100000, from: web3.eth.accounts[0]});
       await self.waitForTX(tx);
 
       let sendTx = web3.eth.sendTransaction({to: numberContract.address, value: web3.toWei(5,'ether'), from: web3.eth.accounts[0]});
@@ -162,6 +167,7 @@ export default class App extends React.Component {
                 <h4><button class="btn btn-default" onClick={() => self.guessNumber()}>Guess Number</button></h4>
               </div>
               <div class="col-xs-4">
+                <input type="text" onChange={(ev) => self.setChangeGameNumber(ev)} />
                 <h4><button class="btn btn-default" onClick={() => self.changeNumber()}>Change Number</button></h4>
               </div>
             </div>
