@@ -5,8 +5,8 @@ Simple web app using web3 and testrpc to play with smart contracts.
 ## Install
 
 ```sh
-git clone https://github.com/windingtree/eth-whorkshop
-cd eth-whorkshop
+git clone https://github.com/windingtree/eth-workshop
+cd eth-workshop
 npm install
 ```
 
