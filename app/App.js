@@ -16,6 +16,7 @@ export default class App extends React.Component {
       super();
       this.state = {
         numberContract: '0x0000000000000000000000000000000000000000',
+        number: 1,
         txs: []
       }
     }
@@ -31,13 +32,37 @@ export default class App extends React.Component {
     async deployNumber(){
       var self = this;
       self.setState({loading: true});
-      let data = web3.eth.contract(NumberJson.abi).new.getData({data: NumberJson.unlinked_binary});
+      let data = web3.eth.contract(NumberJson.abi).new.getData(3, {data: NumberJson.unlinked_binary});
       let numberContract = await self.createContract(NumberJson.abi, data, web3.eth.accounts[0]);
       await self.waitForTX(numberContract.transactionHash);
 
-      console.log('WTIndex deployed:', numberContract);
-      console.log('WTIndex owner:', numberContract.owner());
+      console.log('Number Contract deployed:', numberContract);
+      console.log('Number Contract owner:', numberContract.owner());
       self.setState({numberContract: numberContract.address, loading: false});
+    }
+
+    async guessNumber(){
+      var self = this;
+      self.setState({loading: true});
+      let numberContract = web3.eth.contract(NumberJson.abi).at(self.state.numberContract);
+      console.log(self.state.number);
+      let tx = await numberContract.guessNumber(self.state.number, {gas: 100000, from: web3.eth.accounts[1]});
+      await self.waitForTX(tx);
+
+      console.log('Winner:', numberContract.winner(), web3.eth.accounts[1]);
+      self.setState({number: parseInt(self.state.number)+1, loading: false});
+    }
+
+    async changeNumber(){
+      var self = this;
+      self.setState({loading: true});
+      let numberContract = web3.eth.contract(NumberJson.abi).at(self.state.numberContract);
+
+      let tx = await numberContract.changeNumber(5, {gas: 100000, from: web3.eth.accounts[0]});
+      await self.waitForTX(tx);
+
+      console.log('Winner:', numberContract.winner());
+      self.setState({ loading: false});
     }
 
     async createContract(abi, data, from){
@@ -103,8 +128,14 @@ export default class App extends React.Component {
               </div>
             </div>
             <div class="row text-center">
-              <div class="col-xs-3">
-                <h4><button class="btn btn-default" onClick={() => self.deployNumber()}>Delpoy Number</button></h4>
+              <div class="col-xs-4">
+                <h4><button class="btn btn-default" onClick={() => self.deployNumber()}>Deploy Number</button></h4>
+              </div>
+              <div class="col-xs-4">
+                <h4><button class="btn btn-default" onClick={() => self.guessNumber()}>Guess Number</button></h4>
+              </div>
+              <div class="col-xs-4">
+                <h4><button class="btn btn-default" onClick={() => self.changeNumber()}>Change Number</button></h4>
               </div>
             </div>
           </div>

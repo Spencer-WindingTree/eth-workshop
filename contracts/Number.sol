@@ -23,7 +23,7 @@ contract Number is Ownable {
 		winner = address(0);
 	}
 
-	function guessNUmber(uint _number) noWinner() {
+	function guessNumber(uint _number) noWinner() {
 		if (number == _number) {
 			winner = msg.sender;
 		}
