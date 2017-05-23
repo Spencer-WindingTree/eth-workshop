@@ -33,10 +33,15 @@ export default class App extends React.Component {
       web3.eth.defaultAccount = web3.eth.accounts[0];
     }
 
+    setGameNumber(ev){
+      var self = this;
+      self.setState({gameNumber: ev.target.value});
+    }
+
     async deployNumber(){
       var self = this;
       self.setState({loading: true});
-      let data = web3.eth.contract(NumberJson.abi).new.getData(3, {data: NumberJson.unlinked_binary});
+      let data = web3.eth.contract(NumberJson.abi).new.getData(self.state.gameNumber, {data: NumberJson.unlinked_binary});
       let numberContract = await self.createContract(NumberJson.abi, data, web3.eth.accounts[0]);
       await self.waitForTX(numberContract.transactionHash);
 
@@ -47,6 +52,11 @@ export default class App extends React.Component {
       console.log('Number Contract owner:', numberContract.owner());
       var contractBalance = parseFloat(await web3.eth.getBalance(numberContract.address));
       self.setState({numberContract: numberContract.address, loading: false, contractBalance: contractBalance});
+    }
+
+    setNumber(ev){
+      var self = this;
+      self.setState({number: ev.target.value});
     }
 
     async guessNumber(){
@@ -60,7 +70,7 @@ export default class App extends React.Component {
 
       console.log('Winner:', numberContract.winner(), web3.eth.accounts[1]);
       var contractBalance = parseInt(await web3.eth.getBalance(self.state.numberContract));
-      self.setState({number: parseInt(self.state.number)+1, loading: false, contractBalance: contractBalance});
+      self.setState({loading: false, contractBalance: contractBalance});
     }
 
     async changeNumber(){
@@ -144,9 +154,11 @@ export default class App extends React.Component {
             </div>
             <div class="row text-center">
               <div class="col-xs-4">
-                <h4><button class="btn btn-default" onClick={() => self.deployNumber()}>Deploy Number</button></h4>
+                <input type="text" onChange={(ev) => self.setGameNumber(ev)} />
+                <h4><button class="btn btn-default" onClick={() => self.deployNumber()}>Start Game</button></h4>
               </div>
               <div class="col-xs-4">
+                <input type="text" onChange={(ev) => self.setNumber(ev)} defaultValue={self.state.number}/>
                 <h4><button class="btn btn-default" onClick={() => self.guessNumber()}>Guess Number</button></h4>
               </div>
               <div class="col-xs-4">
